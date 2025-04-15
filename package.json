@@ -11,7 +11,7 @@
     "test": "vitest"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": "next lint --fix"
+    "*.{js,ts,jsx,tsx}": "eslint --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
