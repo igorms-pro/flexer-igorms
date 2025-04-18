@@ -1,13 +1,16 @@
+'use client'
+
+import {useRef} from 'react'
 import {Box, Button, CircularProgress, Collapse, IconButton, Typography,} from '@mui/material'
 import {KeyboardArrowDown, KeyboardArrowUp} from '@mui/icons-material'
-import {Token} from '@lifi/types'
+import {Token, TokenAmount} from '@lifi/types'
 import {TokenList} from './TokenList'
-import {useRef} from 'react'
 
 interface Props {
     chainId: number
     chainName: string
     tokens: Token[]
+    balances?: TokenAmount[]
     isExpanded: boolean
     isCollapsed: boolean
     visibleCount: number
@@ -22,6 +25,7 @@ export const ChainTokenSection = ({
                                       chainId,
                                       chainName,
                                       tokens,
+                                      balances,
                                       isExpanded,
                                       isCollapsed,
                                       visibleCount,
@@ -35,7 +39,7 @@ export const ChainTokenSection = ({
 
     const visibleTokens = tokens.slice(0, visibleCount)
     const remainingToShow = tokens.length - visibleCount
-    const nextChunk = Math.min(20, remainingToShow)
+    const nextChunk = Math.min(15, remainingToShow)
     const canShowLess = visibleCount > 5
 
     return (
@@ -63,7 +67,8 @@ export const ChainTokenSection = ({
             </Box>
 
             <Collapse in={!isCollapsed} timeout={300}>
-                <TokenList tokens={visibleTokens}/>
+                <TokenList tokens={visibleTokens} balances={balances}/>
+
                 {tokens.length > 5 && (
                     <Box mt={2} display="flex" justifyContent="center" gap={2} flexWrap="wrap">
                         {!isExpanded && remainingToShow > 0 && (

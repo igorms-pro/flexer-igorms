@@ -5,10 +5,13 @@ import {Box, Button, CircularProgress, Collapse, Typography} from '@mui/material
 import {useLifiChains} from '@/app/hooks/useLifiChains'
 import {useLifiTokens} from '@/app/hooks/useLifiTokens'
 import {ChainTokenSection} from './ChainTokenSection'
+import {useWalletAddresses} from '@/app/hooks/useWalletAddresses'
+import {useLifiBalances} from '@/app/hooks/useLifiBalances'
 
 export const PortfolioOverview = () => {
     const {chains, isLoading: loadingChains} = useLifiChains()
     const {tokens: tokensByChain, isLoading: loadingTokens} = useLifiTokens()
+    const {evmAddress, solanaAddress} = useWalletAddresses()
 
     const [expandedChains, setExpandedChains] = useState<{ [chainId: number]: boolean }>({})
     const [collapsedChains, setCollapsedChains] = useState<{ [chainId: number]: boolean }>({})
@@ -17,6 +20,13 @@ export const PortfolioOverview = () => {
     const [showTokens, setShowTokens] = useState(true)
 
     const sectionRefs = useRef<Record<number, HTMLDivElement | null>>({})
+
+    const {balancesByChain} = useLifiBalances({
+        evmAddress,
+        solanaAddress,
+        tokensByChain,
+        enabled: !!(evmAddress || solanaAddress),
+    })
 
     if (loadingChains || loadingTokens) {
         return (
@@ -52,7 +62,7 @@ export const PortfolioOverview = () => {
                     const visibleCount = isExpanded ? tokens.length : visibleCounts[chain.id] ?? 5
                     const isLoading = loadingChainIds.includes(chain.id)
                     const remainingToShow = tokens.length - visibleCount
-                    const nextChunk = Math.min(20, remainingToShow)
+                    const nextChunk = Math.min(15, remainingToShow)
 
                     return (
                         <ChainTokenSection
@@ -60,6 +70,7 @@ export const PortfolioOverview = () => {
                             chainId={chain.id}
                             chainName={chain.name}
                             tokens={tokens}
+                            balances={balancesByChain?.[chain.id]}
                             isExpanded={isExpanded}
                             isCollapsed={isCollapsed}
                             visibleCount={visibleCount}

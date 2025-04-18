@@ -5,9 +5,10 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {ToastContainer} from 'react-toastify'
 import {config} from '@/app/lib/wagmi'
 import SolanaProvider from '../providers/SolanaProvider'
+import {configureLifi} from '@/app/providers/lifiConfig'
 
 const queryClient = new QueryClient()
- 
+
 export default function ClientProviders({
                                             children,
                                             themeMode,
@@ -15,6 +16,8 @@ export default function ClientProviders({
     children: React.ReactNode
     themeMode: 'light' | 'dark'
 }) {
+    configureLifi()
+
     return (
         <SolanaProvider>
             <QueryClientProvider client={queryClient}>
