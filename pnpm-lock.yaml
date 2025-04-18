@@ -17,6 +17,9 @@ importers:
       '@lifi/sdk':
         specifier: ^3.6.8
         version: 3.6.8(@solana/wallet-adapter-base@0.9.25(@solana/web3.js@1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/web3.js@1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.27.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4)
+      '@lifi/types':
+        specifier: ^17.13.0
+        version: 17.13.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.22.4)
       '@mui/icons-material':
         specifier: ^7.0.2
         version: 7.0.2(@mui/material@7.0.2(@emotion/react@11.14.0(@types/react@19.1.2)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.2)(react@19.1.0))(@types/react@19.1.2)(react@19.1.0))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.2)(react@19.1.0)
