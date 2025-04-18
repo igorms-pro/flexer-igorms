@@ -6,7 +6,7 @@ import EvmWalletConnector from '@/app/components/wallets/EvmWalletConnector'
 import SolanaWalletConnector from '@/app/components/wallets/SolanaWalletConnector'
 
 export default function Header() {
- 
+
     return (
         <AppBar
             position="sticky"
@@ -14,9 +14,12 @@ export default function Header() {
             sx={{
                 backgroundColor: 'var(--background)',
                 color: 'var(--foreground)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.05)', // subtle separator
+                borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
                 backdropFilter: 'blur(8px)',
                 zIndex: 1100,
+                width: '100vw',
+                left: 0,
+                right: 0,
             }}
         >
             <Toolbar

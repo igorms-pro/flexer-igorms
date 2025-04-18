@@ -13,7 +13,6 @@ export const ChainList = () => {
             </Box>
         )
     }
-
     if (!chains || chains.length === 0) {
         return (
             <Typography textAlign="center" mt={4}>

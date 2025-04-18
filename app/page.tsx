@@ -13,7 +13,10 @@ export default function Home() {
     return (
         <>
             <Header/>
-            <Container maxWidth="lg" sx={{pt: 4, pb: 8}}>
+            <Container
+                maxWidth="lg"
+                sx={{pt: 4, pb: 8, px: {xs: 2, sm: 4}}}
+            >
                 <Box
                     display="flex"
                     flexDirection="column"
