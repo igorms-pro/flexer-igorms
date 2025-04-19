@@ -35,7 +35,7 @@ export const useUsdBalanceSnapshot = () => {
     }, [balancesByChain, tokensFetched]);
 
     const message = useMemo(() => {
-        return `Balance: $${formatUsd(totalUsd)}`;
+        return `Balance: ${formatUsd(totalUsd)}`;
     }, [totalUsd]);
 
     return {

@@ -2,6 +2,7 @@ import {renderHook} from '@testing-library/react'
 import {describe, expect, it, vi} from 'vitest'
 import {useUsdBalanceSnapshot} from '../useUsdBalanceSnapshot'
 import {formatUnits} from 'viem'
+import {formatUsd} from "@/app/utils/balance";
 
 vi.mock('@/app/hooks/useWalletAddresses', () => ({
     useWalletAddresses: () => ({
@@ -52,10 +53,11 @@ describe('useUsdBalanceSnapshot (hook)', () => {
 
         const expectedUsd = parseFloat(formatUnits(BigInt('500000000000000000'), 18)) * 2000 // 0.5 * 2000
         expect(result.current.totalUsd).toBeCloseTo(expectedUsd)
-        expect(result.current.message).toBe(`Balance: $${expectedUsd.toFixed(2)}`)
+        expect(result.current.message).toBe(`Balance: ${formatUsd(expectedUsd)}`);
         expect(result.current.isLoading).toBe(false)
     })
 
+    // TODO
     // it('returns 0 when balances are not available', () => {
     //     // @ts-expect-error
     //     vi.mocked(require('@/app/hooks/useLifiBalances').useLifiBalances).mockReturnValueOnce({
