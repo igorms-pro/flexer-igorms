@@ -67,12 +67,9 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                                 },
                             }}
                         >
-                            {/* Token Symbol */}
                             <Typography fontWeight={600} noWrap sx={{fontSize: '15px'}}>
                                 {token.symbol}
                             </Typography>
-
-                            {/* Token Name and Price */}
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -91,8 +88,6 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                                     ${Number(token.priceUSD || 0).toFixed(2)}
                                 </Typography>
                             </Box>
-
-                            {/* Balance in Tokens */}
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -116,7 +111,6 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                                     {findBalance(token)}
                                 </Typography>
                             </Box>
-
                             {findBalanceInUSD(token) !== '-' && (
                                 <Box
                                     sx={{

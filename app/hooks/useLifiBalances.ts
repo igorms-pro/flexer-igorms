@@ -51,7 +51,7 @@ export const useLifiBalances = ({
         return balances
     }
 
-    const {data, isLoading, isFetched, error} = useQuery({
+    const {data, isLoading, isFetched, error, refetch} = useQuery({
         queryKey,
         queryFn,
         enabled: Boolean(
@@ -68,5 +68,6 @@ export const useLifiBalances = ({
         isLoading,
         isFetched,
         error,
+        refetch,
     }
 }

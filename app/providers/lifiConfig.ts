@@ -1,7 +1,7 @@
 import {createConfig, EVM} from '@lifi/sdk'
 import {createWalletClient, http} from 'viem'
 import {privateKeyToAccount} from 'viem/accounts'
-import {arbitrum, Chain, mainnet, optimism, polygon} from 'viem/chains'
+import {arbitrumSepolia, Chain, optimismSepolia, polygonMumbai, sepolia,} from 'viem/chains'
 
 const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY as string
 
@@ -11,17 +11,17 @@ if (!privateKey) {
 
 const account = privateKeyToAccount(`0x${privateKey}`)
 
-const switchChains = [mainnet, arbitrum, optimism, polygon] as Chain[]
+const switchChains = [sepolia, arbitrumSepolia, optimismSepolia, polygonMumbai] as Chain[]
 
 const client = createWalletClient({
     account,
-    chain: mainnet,
+    chain: sepolia,
     transport: http(),
 })
 
 export const configureLifi = () => {
     createConfig({
-        integrator: 'Your dApp/company name',
+        integrator: 'Flexer Testnet',
         providers: [
             EVM({
                 getWalletClient: () => Promise.resolve(client),

@@ -3,6 +3,7 @@
 import {Box, Container, Typography} from '@mui/material'
 import dynamic from 'next/dynamic'
 import {ChainList} from './components/portfolio/ChainList'
+import {OnchainInscriptionPanel} from "@/app/components/onchain/OnchainInscriptionPanel";
 
 const Header = dynamic(() => import('@/app/components/Header'), {ssr: false})
 const PortfolioOverview = dynamic(() => import('@/app/components/portfolio/PortfolioOverview').then(mod => mod.PortfolioOverview), {
@@ -55,7 +56,18 @@ export default function Home() {
                     </Typography>
                     <PortfolioOverview/>
                 </Box>
-
+                <Box>
+                    <Typography
+                        variant="h5"
+                        fontWeight={600}
+                        textAlign="left"
+                        gutterBottom
+                        color="#f5b5ff"
+                    >
+                        On-Chain USD Balance Snapshot
+                    </Typography>
+                    <OnchainInscriptionPanel/>
+                </Box>
             </Container>
         </>
     )

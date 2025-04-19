@@ -1,21 +1,15 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
-import {
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    avalanche,
-} from 'wagmi/chains'
-import { type Config } from '@wagmi/core'
+import {getDefaultConfig} from '@rainbow-me/rainbowkit'
+import {type Config} from '@wagmi/core'
+
+import {arbitrumSepolia, avalancheFuji, baseGoerli, optimismSepolia, polygonMumbai, sepolia,} from 'wagmi/chains'
 
 export const supportedChains = [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    avalanche,
+    sepolia,
+    polygonMumbai,
+    optimismSepolia,
+    arbitrumSepolia,
+    baseGoerli,
+    avalancheFuji,
 ] as const
 
 export const config: Config = getDefaultConfig({
