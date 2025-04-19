@@ -17,3 +17,21 @@ export const POPULAR_EVM_CHAINS: ChainId [] = [
 ]
 
 export const NATIVE_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const Status = {
+    IDLE: 'idle',
+    PREPARING: 'preparing',
+    SIGNING: 'signing',
+    SENDING: 'sending',
+    WAITING: 'waiting',
+    SUCCESS: 'success',
+    ERROR: 'error',
+} as const;
+
+export const EventType = {
+    START: 'START',
+    PREPARED: 'PREPARED',
+    SIGNED: 'SIGNED',
+    FAIL: 'FAIL',
+    RESET: 'RESET',
+} as const;
