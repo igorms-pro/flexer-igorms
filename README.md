@@ -67,8 +67,10 @@ cp .env_sample .env.local
 Update the value of:
 
 ```env
-NEXT_PUBLIC_PRIVATE_KEY=your_dummy_private_key_for_display
+NEXT_PUBLIC_PRIVATE_KEY=your_private_key_for_display
 ```
+
+- Mine is from Metamask
 
 ### 4. Run the dev server
 

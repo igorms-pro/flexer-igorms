@@ -37,33 +37,51 @@ easy to scale, test, and debug independently.
 
 ### Why Next.js?
 
-- Aligned with LI.FI’s preferred stack (public examples)
+- Aligned with LI.FI’s preferred stack (used across many of their public examples)
 - App Router (app/) offers strong conventions for modularity
 - Built-in support for SSR and file-system routing
 
+#### Downside: Hydration errors
+
+Because this project relies heavily on client-only Web3 providers (e.g., wagmi, solana wallet adapter) and responsive UI
+via MUI, hydration errors occurred multiple times during development. This happens when the HTML rendered on the server
+differs from what React renders on the client.
+
+Typical causes:
+
+- Usage of `window`, `localStorage`, or wallet contexts during SSR
+- Emotion-generated class names (used by MUI) differing slightly between SSR and client
+- `useMediaQuery` or wallet states initializing differently on server
+
+Fix: Wrapped affected sections with a `mounted` flag to defer rendering until after hydration:
+
+```ts
+const [mounted, setMounted] = useState(false);
+useEffect(() => setMounted(true), []);
+```
+
+This delayed rendering until after the client loaded, ensuring server and client HTML match.
+
 ### Why MUI instead of Tailwind?
 
-- I usually prefer Tailwind, I opted for **MUI** to match styling consistency with LI.FI repos
+- Although I usually prefer Tailwind, I opted for MUI to match styling consistency with LI.FI internal repos
 - It was also a fun opportunity to revisit MUI and leverage its responsive utilities, typography system, and dark theme
   capabilities
 
 ### Wallet Context / SSR Issues (Solana)
 
-- **Problem**: Solana’s wallet adapter does not support being used in `layout.tsx` (runs on the server).
-- **Fix**: Moved `SolanaProvider` to a client-only wrapper component. However, I still encountered the issue for a
-  while. To isolate the problem, I created a separate test project where it worked correctly. Ultimately, I deleted the
+- Problem: Solana’s wallet adapter does not support being used in `layout.tsx` (runs on the server).
+- Fix: Moved `SolanaProvider` to a client-only wrapper component. However, I still encountered the issue for a while. To
+  isolate the problem, I created a separate test project where it worked correctly. Ultimately, I deleted the
   `pnpm-lock.yaml` and `node_modules` folder, reinstalled everything, and the issue was resolved. It was likely caused
   by a misstep during initial dependency setup.
-
-
-- **References**:
-    - https://solana.com/developers/cookbook/wallets/connect-wallet-react
+- References:
     - https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs
 
 ### Multiple Token Fetching / UI Rendering
 
-- **Problem**: Thousands of token balance requests caused performance issues and unnecessary RPC errors.
-- **Fix**:
+- Problem: Thousands of token balance requests caused performance issues and unnecessary RPC errors.
+- Fix:
     - Filtered token list to only include `POPULAR_TOKEN_SYMBOLS`
     - Optimized query key and `enabled` condition:
       ```ts
@@ -72,16 +90,16 @@ easy to scale, test, and debug independently.
 
 ### Token Display Pagination
 
-- **Problem**: Displaying 3K+ tokens at once cluttered the UI.
-- **Fix**: Display only the first 5 tokens per chain by default. Added:
-    - `Show More +10`
+- Problem: Displaying 50+ tokens at once cluttered the UI.
+- Fix: Display only the first 5 tokens per chain by default. Added:
+    - `Show More +15`
     - `Show All` button
     - Conditional rendering for expanded views
 
 ### EVM + Solana Wallet Simultaneity
 
-- **Feature**: Allowed both EVM and Solana wallets to be connected simultaneously.
-- **UI**: Each wallet managed independently with appropriate hooks.
+- Feature: Allowed both EVM and Solana wallets to be connected simultaneously.
+- UI: Each wallet managed independently with appropriate hooks.
 
 ---
 
@@ -89,8 +107,8 @@ easy to scale, test, and debug independently.
 
 ### EVM Transactions to Self Failing with `data`
 
-- **Problem**: Sending `data` to your own address resulted in RPC errors.
-- **Fix**: Replaced target address with the burn address:
+- Problem: Sending `data` to your own address resulted in RPC errors.
+- Fix: Replaced target address with the burn address:
   ```ts
   export const BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD'
   ```
@@ -101,10 +119,10 @@ easy to scale, test, and debug independently.
 - FSM states handled:
     - `IDLE`, `PREPARING`, `SIGNING`, `SUCCESS`, `ERROR`
 - Transitions triggered via dispatched events and reducer
-- **References**:
-    - https://en.wikipedia.org/wiki/Finite-state_machine
+- References:
+    - https://xstate.js.org/docs/guides/machines.html
     - https://davidkpiano.medium.com/you-dont-need-a-library-for-state-machines-7f368a42c187
-    - https://www.youtube.com/watch?v=sNFMdLEVxFo
+    - https://www.youtube.com/watch?v=9a1Abd3G8Qo
 
 ### UI Feedback (Status)
 
@@ -123,19 +141,26 @@ easy to scale, test, and debug independently.
 
 ### SOL Balance Not Displaying
 
-- **Problem**: Phantom wallet had SOL but displayed as `0` in UI.
-- **Fix**:
+- Problem: Phantom wallet had SOL but displayed as `0` in UI.
+- Fix:
     - Improved `TokenList.tsx` logic to match `symbol` + `chainId` precisely.
     - Used `formatUnits` for consistent formatting:
       ```ts
       parseFloat(formatUnits(match.amount, token.decimals))
       ```
 
+### Debugging
+
+- Added conditional logs:
+  ```ts
+  if (token.symbol === 'SOL') console.log('[DEBUG SOLANA MATCH]', { token, match })
+  ```
+
 ---
 
 ## 4. Tests
 
-- Unit tests written using **Vitest**
+- Unit tests written using Vitest
 - Mocked:
     - `wagmi` (EVM `getAccount`)
     - `@solana/wallet-adapter-react`
@@ -155,4 +180,3 @@ easy to scale, test, and debug independently.
 ---
 
 All requirements from the challenge have been implemented
-

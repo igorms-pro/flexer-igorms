@@ -32,12 +32,25 @@ export const OnchainInscriptionPanel = () => {
         start({address, chain, message})
     }
 
+    if (!mounted) {
+        return (
+            <Card sx={{mt: 4}}>
+                <CardContent>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                        <CircularProgress size={20}/>
+                        <Typography variant="body2">Preparing interface...</Typography>
+                    </Stack>
+                </CardContent>
+            </Card>
+        )
+    }
+
     return (
         <>
             <Card sx={{mt: 4}}>
                 <CardContent>
                     <Stack spacing={2}>
-                        {isBalanceLoading || !mounted ? (
+                        {isBalanceLoading ? (
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <CircularProgress size={20}/>
                                 <Typography variant="body2">Calculating balance...</Typography>
@@ -52,6 +65,7 @@ export const OnchainInscriptionPanel = () => {
                                 </Button>
                             </Stack>
                         )}
+
                         {state === Status.IDLE && (
                             <Button
                                 variant="contained"
@@ -62,11 +76,13 @@ export const OnchainInscriptionPanel = () => {
                                 Inscribe Balance On-Chain
                             </Button>
                         )}
+
                         <OnchainInscriptionStatus
                             state={state}
                             context={context}
                             onReset={reset}
                         />
+
                         <SvmTransactionHistoryTable shouldRefresh={state === Status.SUCCESS}/>
                     </Stack>
                 </CardContent>
