@@ -1,4 +1,4 @@
-import {Address, Chain, PublicClient, toHex, WalletClient} from 'viem';
+import {Address, Chain, PublicClient, toHex, WalletClient} from 'viem'
 
 export const sendMessageEvm = async ({
                                          client,
@@ -7,23 +7,25 @@ export const sendMessageEvm = async ({
                                          address,
                                          chain,
                                      }: {
-    client: WalletClient;
-    publicClient: PublicClient;
-    message: string;
-    address: Address;
-    chain: Chain;
+    client: WalletClient
+    publicClient: PublicClient
+    message: string
+    address: Address
+    chain: Chain
 }): Promise<`0x${string}`> => {
-    const data = toHex(message);
+    const data = toHex(message)
 
+    // using burn address as a mock recipient to allow sending a transaction with data,
+    // since sending to self with data is rejected by some evm rpc like sepolia.
     const hash = await client.sendTransaction({
         account: address,
-        to: address,
+        to: '0x000000000000000000000000000000000000dEaD',
         data,
         value: BigInt(0),
         chain,
-    });
+    })
 
-    await publicClient.waitForTransactionReceipt({hash});
+    await publicClient.waitForTransactionReceipt({hash})
 
-    return hash;
-};
+    return hash
+}

@@ -16,6 +16,17 @@ export const POPULAR_EVM_CHAINS: ChainId [] = [
     avalanche.id,       // 43114
 ]
 
+export const POPULAR_TOKEN_SYMBOLS = [
+    'ETH',    // Ethereum, Optimism, Arbitrum, Base
+    'MATIC',  // Polygon
+    'BNB',    // BSC
+    'AVAX',   // Avalanche
+    'USDC',   // Stablecoin
+    'DAI',    // Stablecoin
+    'WBTC',   // Wrapped Bitcoin
+    'SOL'     // Solana
+]
+
 export const NATIVE_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const Status = {

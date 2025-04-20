@@ -4,6 +4,7 @@ import {Box, Grid, Typography, useMediaQuery, useTheme} from '@mui/material'
 import type {Token, TokenAmount} from '@lifi/types'
 import {formatBalance} from '@/app/utils/balance'
 import {formatUnits} from 'viem'
+import {SOLANA_LIFI_CHAIN_ID} from '@/app/constants'
 
 type Props = {
     tokens: Token[]
@@ -14,18 +15,25 @@ export const TokenList = ({tokens, balances = []}: Props) => {
     const theme = useTheme()
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
 
+    const findBalanceMatch = (token: Token): TokenAmount | undefined => {
+        const tokenAddr = token.address?.toLowerCase?.()
+        return balances.find((b) => {
+            const balanceAddr = b.address?.toLowerCase?.()
+            return (
+                (tokenAddr && balanceAddr && tokenAddr === balanceAddr) ||
+                (token.symbol === 'SOL' && b.symbol === 'SOL' && token.chainId === SOLANA_LIFI_CHAIN_ID)
+            )
+        })
+    }
+
     const findBalance = (token: Token): string => {
-        const match = balances.find(
-            (b) => b.address.toLowerCase() === token.address.toLowerCase()
-        )
-        return match?.amount ? formatBalance(match.amount.toString()) : '-'
+        const match = findBalanceMatch(token)
+        return match?.amount !== undefined ? formatBalance(match.amount.toString()) : '-'
     }
 
     const findBalanceInUSD = (token: Token): string => {
-        const match = balances.find(
-            (b) => b.address.toLowerCase() === token.address.toLowerCase()
-        )
-        if (match?.amount) {
+        const match = findBalanceMatch(token)
+        if (match?.amount !== undefined) {
             const decimals = token.decimals ?? 18
             const readableBalance = parseFloat(formatUnits(match.amount, decimals))
             const balanceInUSD = readableBalance * parseFloat(token.priceUSD || '0')
@@ -34,10 +42,15 @@ export const TokenList = ({tokens, balances = []}: Props) => {
         return '-'
     }
 
+    const hasPositiveBalance = (token: Token): boolean => {
+        const match = findBalanceMatch(token)
+        return match?.amount !== undefined && match.amount > BigInt(0)
+    }
+
     return (
         <Grid container spacing={2} justifyContent="center">
             {tokens.map((token) => {
-                const hasBalance = findBalance(token) !== '-'
+                const borderColor = hasPositiveBalance(token) ? '#f5b5ff' : '#eee'
 
                 return (
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -53,7 +66,7 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                         }}
                     >
                         <Box
-                            border={`1px solid ${hasBalance ? '#f5b5ff' : '#eee'}`}
+                            border={`1px solid ${borderColor}`}
                             borderRadius={2}
                             p={1.25}
                             sx={{
@@ -77,11 +90,7 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    sx={{fontSize: '12px'}}
-                                >
+                                <Typography variant="caption" color="text.secondary" sx={{fontSize: '12px'}}>
                                     {token.name}
                                 </Typography>
                                 <Typography fontWeight={500} sx={{fontSize: '14px'}}>
@@ -103,11 +112,7 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                                 >
                                     Balance:
                                 </Typography>
-                                <Typography
-                                    variant="caption"
-                                    fontWeight={400}
-                                    sx={{fontSize: '14px'}}
-                                >
+                                <Typography variant="caption" fontWeight={400} sx={{fontSize: '14px'}}>
                                     {findBalance(token)}
                                 </Typography>
                             </Box>
@@ -127,11 +132,7 @@ export const TokenList = ({tokens, balances = []}: Props) => {
                                     >
                                         USD:
                                     </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        fontWeight={500}
-                                        sx={{fontSize: '14px'}}
-                                    >
+                                    <Typography variant="caption" fontWeight={500} sx={{fontSize: '14px'}}>
                                         {findBalanceInUSD(token)}
                                     </Typography>
                                 </Box>
