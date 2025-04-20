@@ -55,7 +55,7 @@ export const OnchainInscriptionPanel = () => {
                         {state === Status.IDLE && (
                             <Button
                                 variant="contained"
-                                disabled={isBalanceLoading}
+                                disabled={isBalanceLoading || (!evmAddress && !solanaAddress)}
                                 onClick={handleStart}
                                 fullWidth
                             >

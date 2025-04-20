@@ -3,7 +3,6 @@
 import {Box, Grid, Typography, useMediaQuery, useTheme} from '@mui/material'
 import type {Token, TokenAmount} from '@lifi/types'
 import {formatBalance} from '@/app/utils/balance'
-import {formatUnits} from 'viem'
 import {SOLANA_LIFI_CHAIN_ID} from '@/app/constants'
 
 type Props = {
@@ -17,31 +16,36 @@ export const TokenList = ({tokens, balances = []}: Props) => {
 
     const findBalanceMatch = (token: Token): TokenAmount | undefined => {
         const tokenAddr = token.address?.toLowerCase?.()
-        return balances.find((b) => {
+
+        const match = balances.find((b) => {
             const balanceAddr = b.address?.toLowerCase?.()
-            return (
-                (tokenAddr && balanceAddr && tokenAddr === balanceAddr) ||
-                (token.symbol === 'SOL' && b.symbol === 'SOL' && token.chainId === SOLANA_LIFI_CHAIN_ID)
-            )
+            const isSolMatch =
+                token.symbol === 'SOL' &&
+                b.symbol === 'SOL' &&
+                token.chainId === SOLANA_LIFI_CHAIN_ID &&
+                b.chainId === SOLANA_LIFI_CHAIN_ID
+
+            const isGenericMatch = tokenAddr && balanceAddr && tokenAddr === balanceAddr
+
+            return isSolMatch || isGenericMatch
         })
+        return match
     }
 
     const findBalance = (token: Token): string => {
         const match = findBalanceMatch(token)
-        return match?.amount !== undefined ? formatBalance(match.amount.toString()) : '-'
+        if (!match?.amount) return '-'
+        return formatBalance(match.amount, token.decimals ?? 18)
     }
-
     const findBalanceInUSD = (token: Token): string => {
         const match = findBalanceMatch(token)
-        if (match?.amount !== undefined) {
-            const decimals = token.decimals ?? 18
-            const readableBalance = parseFloat(formatUnits(match.amount, decimals))
-            const balanceInUSD = readableBalance * parseFloat(token.priceUSD || '0')
-            return `$${balanceInUSD.toFixed(2)}`
-        }
-        return '-'
-    }
+        if (!match?.amount) return '-'
 
+        const balanceFormatted = parseFloat(formatBalance(match.amount, token.decimals ?? 18, 12)) // 12 pour précision
+        const balanceInUSD = balanceFormatted * parseFloat(token.priceUSD || '0')
+
+        return `$${balanceInUSD.toFixed(2)}`
+    }
     const hasPositiveBalance = (token: Token): boolean => {
         const match = findBalanceMatch(token)
         return match?.amount !== undefined && match.amount > BigInt(0)
