@@ -2,12 +2,11 @@ import type {UseAccountReturnType} from 'wagmi';
 import type {PublicKey} from '@solana/web3.js';
 import type {WalletContextState} from '@solana/wallet-adapter-react';
 import {vi} from 'vitest';
+import {BURN_ADDRESS} from "@/app/constants";
 
-/**
- * Mock d’un compte EVM connecté (useAccount).
- */
+
 export const getMockAccount = ({
-                                   address = '0xEVM_TEST_ADDRESS',
+                                   address = BURN_ADDRESS,
                                    isConnected = true,
                                }: {
     address?: `0x${string}`;
@@ -25,9 +24,6 @@ export const getMockAccount = ({
     status: isConnected ? 'connected' : 'disconnected',
 } as unknown as UseAccountReturnType);
 
-/**
- * Mock d’un compte EVM déconnecté.
- */
 export const getMockDisconnectedAccount = (): UseAccountReturnType => ({
     address: undefined,
     addresses: [],
@@ -41,9 +37,6 @@ export const getMockDisconnectedAccount = (): UseAccountReturnType => ({
     status: 'disconnected',
 } as unknown as UseAccountReturnType);
 
-/**
- * Mock d’un wallet Solana compatible WalletContextState.
- */
 export const getMockSolanaWallet = ({
                                         address = 'SOLANA_TEST_ADDRESS',
                                         connected = true,

@@ -1,4 +1,5 @@
 import {Address, Chain, PublicClient, toHex, WalletClient} from 'viem'
+import {BURN_ADDRESS} from "@/app/constants";
 
 export const sendMessageEvm = async ({
                                          client,
@@ -19,7 +20,7 @@ export const sendMessageEvm = async ({
     // since sending to self with data is rejected by some evm rpc like sepolia.
     const hash = await client.sendTransaction({
         account: address,
-        to: '0x000000000000000000000000000000000000dEaD',
+        to: BURN_ADDRESS,
         data,
         value: BigInt(0),
         chain,
