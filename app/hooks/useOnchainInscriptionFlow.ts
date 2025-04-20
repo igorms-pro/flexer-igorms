@@ -6,7 +6,7 @@ import {sendMessageSvm} from '@/app/lib/onchain/sendMessageSvm';
 import {usePublicClient, useWalletClient} from 'wagmi';
 import {useConnection, useWallet} from '@solana/wallet-adapter-react';
 import {transition} from '@/app/fsm/onchainMessageMachine';
-import {InscriptionContext, InscriptionEvent, InscriptionStatus,} from '@/app/fsm/onchainMessageMachineTypes';
+import {InscriptionContext, InscriptionEvent, InscriptionStatus} from '@/app/fsm/onchainMessageMachineTypes';
 import {EventType, Status} from '@/app/constants';
 
 const initialContext: InscriptionContext = {
@@ -24,7 +24,11 @@ function reducer(
     state: { state: InscriptionStatus; context: InscriptionContext },
     event: InscriptionEvent
 ) {
-    return transition(state.state, event, state.context);
+    console.log('[FSM][REDUCER] Received event:', event);
+    const result = transition(state.state, event, state.context);
+    console.log('[FSM][REDUCER] New state:', result.state);
+    console.log('[FSM][REDUCER] New context:', result.context);
+    return result;
 }
 
 export const useOnchainInscriptionFlow = () => {
@@ -45,6 +49,7 @@ export const useOnchainInscriptionFlow = () => {
             chain: 'EVM' | 'SVM';
             message: string;
         }) => {
+            console.log('[FSM][HOOK] start() called');
             dispatch({type: EventType.START, payload: {address, chain, message}});
             dispatch({type: EventType.PREPARED});
 
@@ -80,6 +85,7 @@ export const useOnchainInscriptionFlow = () => {
     );
 
     const reset = () => {
+        console.log('[FSM][HOOK] reset() called');
         dispatch({type: EventType.RESET});
     };
 

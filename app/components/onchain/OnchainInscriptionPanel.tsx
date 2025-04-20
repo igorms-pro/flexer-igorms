@@ -4,10 +4,12 @@ import {Alert, Button, Card, CardContent, CircularProgress, Link, Stack, Typogra
 import {useEffect, useState} from 'react'
 import {useUsdBalanceSnapshot} from '@/app/hooks/useUsdBalanceSnapshot'
 import {useOnchainInscriptionFlow} from '@/app/hooks/useOnchainInscriptionFlow'
+import {useWalletAddresses} from '@/app/hooks/useWalletAddresses'
 import {Status} from '@/app/constants'
 
 export const OnchainInscriptionPanel = () => {
     const {message, isLoading: isBalanceLoading} = useUsdBalanceSnapshot()
+    const {evmAddress, solanaAddress} = useWalletAddresses()
     const {state, context, start, reset} = useOnchainInscriptionFlow()
 
     const isPending = state === Status.PREPARING || state === Status.SIGNING
@@ -19,9 +21,28 @@ export const OnchainInscriptionPanel = () => {
         setMounted(true)
     }, [])
 
+    useEffect(() => {
+        console.log('[FSM STATE]', state)
+        console.log('[FSM CONTEXT]', context)
+    }, [state, context])
+
     const handleStart = () => {
-        if (!context.address || !context.chain) return
-        start({address: context.address, chain: context.chain, message})
+        console.log('[handleStart] clicked')
+
+        const address = evmAddress || solanaAddress
+        const chain = evmAddress ? 'EVM' : solanaAddress ? 'SVM' : null
+
+        console.log('[handleStart] address:', address)
+        console.log('[handleStart] chain:', chain)
+        console.log('[handleStart] message:', message)
+
+        if (!address || !chain) {
+            console.warn('[handleStart] missing wallet address or chain')
+            return
+        }
+
+        console.log('[handleStart] calling start...')
+        start({address, chain, message})
     }
 
     return (
