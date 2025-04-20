@@ -39,7 +39,7 @@ export const ChainTokenSection = ({
 
     const visibleTokens = tokens.slice(0, visibleCount)
     const remainingToShow = tokens.length - visibleCount
-    const nextChunk = Math.min(15, remainingToShow)
+    const nextChunk = Math.min(10, remainingToShow)
     const canShowLess = visibleCount > 5
 
     return (

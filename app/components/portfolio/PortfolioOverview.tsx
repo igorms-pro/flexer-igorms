@@ -62,7 +62,7 @@ export const PortfolioOverview = () => {
                     const visibleCount = isExpanded ? tokens.length : visibleCounts[chain.id] ?? 5
                     const isLoading = loadingChainIds.includes(chain.id)
                     const remainingToShow = tokens.length - visibleCount
-                    const nextChunk = Math.min(15, remainingToShow)
+                    const nextChunk = Math.min(10, remainingToShow)
 
                     return (
                         <ChainTokenSection
